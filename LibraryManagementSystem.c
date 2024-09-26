@@ -58,12 +58,11 @@ void addStudentsRecords();
 void viewStudentsRecords();
 void deleteStudentsRecords();
 void booksIssued();
-void finesIssued();
 
 // transaction section functions...
 void issueBook();
 void returnBook();
-void fines();
+
 
 int main()
 {
@@ -88,7 +87,7 @@ int main()
 
     issuing = fopen("libraryIssues.DAT", "rb+");
     if (issuing == NULL)
-    {
+        {
         issuing = fopen("libraryIssues.DAT", "wb+");
         if (issuing == NULL)
             exit(1);
@@ -100,7 +99,7 @@ int main()
     {
 
         printf("\nWELCOME TO LIBRARY MANAGEMENT SYSTEM\n\n");
-        printf("CHOOSE :\n1.BOOKS\n2.STUDENTS\n3.TRANSACTIONS\n PRESS ANY OTHER KEY TO EXIT\n\n");
+        printf("CHOOSE :\n1.BOOKS\n2.STUDENTS\n3.TRANSACTIONS\nWNTER ANY OTHER KEY TO EXIT\n\n");
         scanf("%d", &choice);
         system("cls");
         switch (choice)
@@ -131,7 +130,7 @@ void bookSection()
     while (bookChoice < 8)
     {
 
-        printf("CHOOSE :\n1.ADD BOOKS\n2.VIEW INDIVIDUAL BOOKS\n3.DELETE BOOKS\n4.BOOKS PURCHASED\n5.VIEW BOOK STOCKS\n6.TOTAL BOOKS\n7.VIEW ALL BOOKS\n8.RETURN TO MAIN MENU\n\n");
+        printf("CHOOSE :\n1.ADD BOOKS\n2.VIEW INDIVIDUAL BOOKS\n3.DELETE BOOKS\n4.BOOKS PURCHASED\n5.VIEW BOOK STOCKS\n6.TOTAL BOOKS\n7.VIEW ALL BOOKS\nENTER ANY OTHER KEY TO MAIN MENU\n\n");
         scanf("%d", &bookChoice);
         system("cls");
 
@@ -174,7 +173,7 @@ void studentSection()
     while (studChoice < 6)
     {
 
-        printf("\nCHOOSE :\n1.ADD STUDENT RECORDS\n2.VIEW STUDENT RECORDS\n3.DELETE STUDENT RECORDS\n4.BOOKS ISSUED\n5.FINES ISSUED\n6.RETURN TO MAIN MENU\n\n");
+        printf("\nCHOOSE :\n1.ADD STUDENT RECORDS\n2.VIEW STUDENT RECORDS\n3.DELETE STUDENT RECORDS\n4.BOOKS ISSUED\nENTER ANY OTHER KEY TO RETURN TO MAIN MENU\n\n");
         scanf("%d", &studChoice);
         system("cls");
 
@@ -192,9 +191,6 @@ void studentSection()
         case 4:
             booksIssued();
             break;
-        case 5:
-            finesIssued();
-            break;
         default:
             printf("\nEXITING\n\n");
             break;
@@ -208,7 +204,7 @@ void transactionSection()
     int transactChoice = 0;
     while (transactChoice < 4)
     {
-        printf("CHOOSE :\n1.ISSUE BOOK\n2.RETURN BOOK\n3.FINES\n4.RETURN TO MAIN MENU\n\n");
+        printf("CHOOSE :\n1.ISSUE BOOK\n2.RETURN BOOK\n4.RETURN TO MAIN MENU\n\n");
         scanf("%d", &transactChoice);
         system("cls");
         switch (transactChoice)
@@ -218,9 +214,6 @@ void transactionSection()
             break;
         case 2:
             returnBook();
-            break;
-        case 3:
-            fines();
             break;
         default:
             printf("EXITING\n");
@@ -538,10 +531,10 @@ void issueBook()
         std.booksIssued++;
         book.currentQuantity--;
 
-        fseek(fp, -sizeof(book), SEEK_CUR);
+        fseek(fp, -(long)sizeof(book), SEEK_CUR);
         fwrite(&book, sizeof(book), 1, fp);
 
-        fseek(student, -sizeof(std), SEEK_CUR);
+        fseek(student, -(long)sizeof(std), SEEK_CUR);
         fwrite(&std, sizeof(std), 1, student);
 
         fwrite(&bookIssue, sizeof(bookIssue), 1, issuing);
@@ -597,17 +590,15 @@ void returnBook()
         }
     }
 
-    fseek(fp, -sizeof(book), SEEK_CUR);
+    fseek(fp, -(long)sizeof(book), SEEK_CUR);
     fwrite(&book, sizeof(book), 1, fp);
 
-    fseek(student, -sizeof(std), SEEK_CUR);
+    fseek(student, -(long)sizeof(std), SEEK_CUR);
     fwrite(&std, sizeof(std), 1, student);
 
-    fseek(issuing, -sizeof(bookIssue), SEEK_CUR);
+    fseek(issuing, -(long)sizeof(bookIssue), SEEK_CUR);
     fwrite(&bookIssue, sizeof(bookIssue), 1, issuing);
     fflush(stdin);
 
     return;
 }
-
-void fines() {}
